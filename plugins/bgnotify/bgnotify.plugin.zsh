@@ -6,7 +6,7 @@
 zmodload zsh/datetime || { print "can't load zsh/datetime"; return } # faster than date()
 autoload -Uz add-zsh-hook || { print "can't add zsh hook!"; return }
 
-(( ${+bgnotify_threshold} )) || bgnotify_threshold=5 #default 10 seconds
+(( ${+bgnotify_threshold} )) || bgnotify_threshold=2 #default 10 seconds
 
 
 ## definitions ##
@@ -16,7 +16,7 @@ if ! (type bgnotify_formatted | grep -q 'function'); then ## allow custom functi
     elapsed="$(( $3 % 60 ))s"
     (( $3 >= 60 )) && elapsed="$((( $3 % 3600) / 60 ))m $elapsed"
     (( $3 >= 3600 )) && elapsed="$(( $3 / 3600 ))h $elapsed"
-    [ $1 -eq 0 ] && bgnotify "#win (took $elapsed)" "$2" || bgnotify "#fail (took $elapsed)" "$2"
+    [ $1 -eq 0 ] && bgnotify "#命令执行成功 (耗时: $elapsed)" "$2" || bgnotify "#命令执行失败 (耗时: $elapsed)" "$2"
   }
 fi
 

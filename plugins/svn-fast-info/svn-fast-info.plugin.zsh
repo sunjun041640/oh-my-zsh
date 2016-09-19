@@ -24,22 +24,7 @@ function svn_prompt_info() {
       $ZSH_THEME_SVN_PROMPT_SUFFIX \
       $ZSH_PROMPT_BASE_COLOR
   else
-    printf '%s%s%s %s%s:%s%s%s%s%s' \
-      $ZSH_PROMPT_BASE_COLOR \
-      $ZSH_THEME_SVN_PROMPT_PREFIX \
-      \
-      "$(svn_status_info $info)" \
-      $ZSH_PROMPT_BASE_COLOR \
-      \
-      $ZSH_THEME_BRANCH_NAME_COLOR \
-      $(svn_current_branch_name $info) \
-      $ZSH_PROMPT_BASE_COLOR \
-      \
-      $(svn_current_revision $info) \
-      $ZSH_PROMPT_BASE_COLOR \
-      \
-      $ZSH_THEME_SVN_PROMPT_SUFFIX \
-      $ZSH_PROMPT_BASE_COLOR
+    printf "$ZSH_THEME_SVN_PROMPT_PREFIX $(svn_current_branch_name $info) $(svn_current_revision $info)$fg_bold[green]$(svn_status_info $info)$ZSH_THEME_SVN_PROMPT_SUFFIX"
   fi
 }
 
@@ -49,7 +34,8 @@ function svn_repo_need_upgrade() {
 }
 
 function svn_current_branch_name() {
-  grep '^URL:' <<< "${1:-$(svn info 2> /dev/null)}" | egrep -o '(tags|branches)/[^/]+|trunk'	
+  # grep '^URL:' <<< "${1:-$(svn info 2> /dev/null)}" | egrep -o '(tags|branches)/[^/]+|trunk'
+  svn info | grep ^URL | egrep -o 'http://.*?((tags|branches)/[^/]+|trunk)'
 }
 
 function svn_repo_root_name() {
